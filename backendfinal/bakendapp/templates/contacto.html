@@ -1,0 +1,30 @@
+<h2>Formulario de Contacto</h2>
+<form id="formularioContacto">
+<input type="text" name="nombre" placeholder="Tu nombre" required><br>
+<input type="email" name="email" placeholder="Tu correo" required><br>
+<textarea name="mensaje" placeholder="Escribe tu mensaje" required></textarea><br>
+<button type="submit">Enviar</button>
+</form>
+
+<script>
+document.getElementById("formularioContacto").addEventListener("submit", async function (e) {
+e.preventDefault();
+const formData = new FormData(this);
+
+const response = await fetch("http://localhost:8000/api/contacto/", {
+method: "POST",
+body: JSON.stringify({
+nombre: formData.get("nombre"),
+email: formData.get("email"),
+mensaje: formData.get("mensaje")
+}),
+headers: {"Content-Type": "application/json"}});
+
+const data = await response.json();
+if (response.ok) {
+alert("Mensaje enviado correctamente");
+} else {
+alert("Error al enviar: " + JSON.stringify(data));
+}
+});
+</script>
