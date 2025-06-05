@@ -22,10 +22,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('bakendapp.urls')),
-    
+    path('admin/', admin.site.urls),
+    path('', include('bakendapp.urls')),
 ]
 
 # Para servir archivos de imagen en desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
