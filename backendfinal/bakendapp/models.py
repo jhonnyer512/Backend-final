@@ -1,6 +1,5 @@
 from django.db import models
 
-# Modelo para representar productos o servicios
 class Producto(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
@@ -10,16 +9,15 @@ class Producto(models.Model):
     def __str__(self):
         return self.nombre
 
-# Modelo para testimonios de clientes
-class Testimonio(models.Model):
-    nombre_cliente = models.CharField(max_length=100)
-    comentario = models.TextField()
-    foto = models.ImageField(upload_to='testimonios/', blank=True, null=True)
+class Bebida(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    imagen = models.ImageField(upload_to='bebidas/')
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.nombre_cliente
+        return self.nombre
 
-# Modelo para mensajes de contacto
 class MensajeContacto(models.Model):
     nombre = models.CharField(max_length=100)
     email = models.EmailField()
@@ -36,3 +34,26 @@ class Usuario(models.Model):
 
     def __str__(self):
         return self.nombre
+
+class PerfilActivo(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.usuario.nombre
+
+class Carrito(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)
+    bebida = models.ForeignKey(Bebida, on_delete=models.CASCADE, null=True, blank=True)
+    cantidad = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.producto or self.bebida} x {self.cantidad}"
+
+def test_crear_carrito(self):
+    producto = Producto.objects.create(nombre="Producto1", precio=10.0)  # ajusta campos reales
+    carrito = Carrito.objects.create(
+        producto=producto,  # aquí va la instancia, no un string
+        bebida="Coca-Cola",
+        cantidad=2
+    )
+    self.assertEqual(carrito.cantidad, 2)
